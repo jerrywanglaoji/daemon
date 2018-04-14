@@ -26,6 +26,8 @@ void init_daemon()
     else if (pid > 0)
         exit(0);
 
+    printf("fork success\n");
+
     //创建一个会话，会话只包含子进程，其子进程是会话首进程
     setsid();
 
@@ -35,11 +37,16 @@ void init_daemon()
     //设置文件权限掩码
     umask(0);
 
+    printf("set success\n");
+
     for(i = 0; i < getdtablesize(); ++i)
     {
         //关闭文件权限描述符
         close(i);
     }
+
+    printf("close success\n");
+
 }
 
 void func_do()
@@ -49,20 +56,20 @@ void func_do()
 
     while(1)
     {
-        if (fd = open("./daemon.log", O_CREAT|O_WRONLY|O_APPEND, 0600) < 0)
+        if (fd = open("/home/jerry/git/daemon/daemon.log", O_CREAT|O_WRONLY|O_APPEND, 0600) < 0)
         {
             printf("open file error\n");
             exit(1);
         }
         write(fd, buf, strlen(buf) +1);
         close(fd);
-        sleep(10);
+        sleep(3);
     }
 }
 
 int main()
 {
-    //init_daemon();
+    init_daemon();
     func_do();
     return 0;
 }
